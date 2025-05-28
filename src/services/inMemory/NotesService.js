@@ -23,7 +23,6 @@ class NotesService {
     if (!isSuccess) {
       throw new InvariantError('Catatan gagal ditambahkan');
     }
-
     return id;
   }
 
