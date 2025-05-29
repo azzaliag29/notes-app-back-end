@@ -7,7 +7,8 @@
     "start:prod": "set NODE_ENV=production && node ./src/server.js",
     "start:dev": "nodemon ./src/server.js",
     "lint": "eslint ./src",
-    "fix": "eslint . --fix"
+    "fix": "eslint . --fix",
+    "migrate": "node-pg-migrate"
   },
   "keywords": [],
   "author": "",
@@ -20,7 +21,10 @@
   },
   "dependencies": {
     "@hapi/hapi": "^21.3.2",
+    "dotenv": "^16.5.0",
     "joi": "^17.13.3",
-    "nanoid": "^3.1.20"
+    "nanoid": "^3.1.20",
+    "node-pg-migrate": "^8.0.1",
+    "pg": "^8.16.0"
   }
 }
