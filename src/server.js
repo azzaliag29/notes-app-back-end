@@ -13,7 +13,6 @@ const users = require('./api/users');
 const UsersService = require('./services/postgres/UsersService');
 const UsersValidator = require('./validator/users');
 
-// autheetications
 // authentications
 const authentications = require('./api/authentications');
 const AuthenticationsService = require('./services/postgres/AuthenticationsService');
@@ -91,32 +90,32 @@ const init = async () => {
   menambahkan sebuah aksi (berupa fungsi) pada siklus (lifecycle) tertentu. */
 
   server.ext('onPreResponse', (request, h) => {
+    // mendapatkan konteks response dari request
     const { response } = request;
-    // kalau error, response akan mengandung error dari throw
-
-    // Mengecek apakah error di response itu instanceof ClientError
-    // penanganan client error secara internal.
-    if (response instanceof ClientError) {
-      const newResponse = h.response({
-        status: 'fail',
-        message: response.message,
-      });
-      newResponse.code(response.statusCode);
-      return newResponse;
-    }
-
-    // Penanganan server error
+    console.log(response);
     if (response instanceof Error) {
-    // Log error untuk debugging
-      console.error(response);
+      // penanganan client error secara internal.
+      if (response instanceof ClientError) {
+        const newResponse = h.response({
+          status: 'fail',
+          message: response.message,
+        });
+        newResponse.code(response.statusCode);
+        return newResponse;
+      }
+      // mempertahankan penanganan client error oleh hapi secara native, seperti 404, etc.
+      if (!response.isServer) {
+        return h.continue;
+      }
+      // penanganan server error sesuai kebutuhan
       const newResponse = h.response({
         status: 'error',
-        message: 'Terjadi kegagalan pada server kami',
+        message: 'terjadi kegagalan pada server kami',
       });
       newResponse.code(500);
       return newResponse;
     }
-
+    // jika bukan error, lanjutkan dengan response sebelumnya (tanpa terintervensi)
     return h.continue;
   });
 
